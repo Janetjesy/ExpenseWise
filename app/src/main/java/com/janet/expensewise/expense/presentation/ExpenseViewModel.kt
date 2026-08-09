@@ -46,4 +46,8 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
             repository.deleteExpense(expense)
         }
     }
+
+    suspend fun getExpenseById(expenseId: Int): Expense? {
+        return repository.getExpenseById(expenseId)
+    }
 }

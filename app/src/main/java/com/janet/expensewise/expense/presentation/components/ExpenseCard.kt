@@ -1,20 +1,28 @@
 package com.janet.expensewise.expense.presentation.components
 
-
-
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.janet.expensewise.expense.data.Expense
+import androidx.compose.foundation.clickable
 
 @Composable
-fun ExpenseCard(expense: Expense) {
+fun ExpenseCard(
+    expense: Expense,
+    onDelete: (Expense) -> Unit,
+    onClick: () -> Unit
+) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
+            .clickable { onClick() }
     ) {
         Row(
             modifier = Modifier
@@ -29,10 +37,27 @@ fun ExpenseCard(expense: Expense) {
                 }
                 Text(text = expense.date, style = MaterialTheme.typography.bodySmall)
             }
-            Text(
-                text = "KES ${expense.amount}",
-                style = MaterialTheme.typography.titleMedium
-            )
+
+            Row {
+                Text(
+                    text = "KES ${expense.amount}",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                IconButton(onClick = { showDeleteDialog = true }) {
+                    Icon(Icons.Default.Delete, contentDescription = "Delete expense")
+                }
+            }
         }
+    }
+
+    if (showDeleteDialog) {
+        ConfirmDeleteDialog(
+            onConfirm = {
+                onDelete(expense)
+                showDeleteDialog = false
+            },
+            onDismiss = { showDeleteDialog = false }
+        )
     }
 }

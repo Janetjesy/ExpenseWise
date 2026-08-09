@@ -20,7 +20,9 @@ import com.janet.expensewise.expense.presentation.components.ExpenseCard
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    viewModel: ExpenseViewModel = viewModel()
+    viewModel: ExpenseViewModel = viewModel(),
+    onAddExpenseClick: () -> Unit,
+    onExpenseClick: (Int) -> Unit
 ) {
     val expenses by viewModel.allExpenses.collectAsState()
 
@@ -31,7 +33,7 @@ fun HomeScreen(
             TopAppBar(title = { Text("ExpenseWise") })
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /* TODO: navigate to Add screen */ }) {
+            FloatingActionButton(onClick = onAddExpenseClick) {
                 Icon(Icons.Default.Add, contentDescription = "Add Expense")
             }
         }
@@ -55,7 +57,11 @@ fun HomeScreen(
             } else {
                 LazyColumn {
                     items(expenses) { expense ->
-                        ExpenseCard(expense = expense)
+                        ExpenseCard(
+                            expense = expense,
+                            onDelete = { viewModel.deleteExpense(it) },
+                            onClick = { onExpenseClick(expense.id) }
+                        )
                     }
                 }
             }
