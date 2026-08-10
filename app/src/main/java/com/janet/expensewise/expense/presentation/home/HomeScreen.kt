@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.PieChart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,7 +23,8 @@ import com.janet.expensewise.expense.presentation.components.ExpenseCard
 fun HomeScreen(
     viewModel: ExpenseViewModel = viewModel(),
     onAddExpenseClick: () -> Unit,
-    onExpenseClick: (Int) -> Unit
+    onExpenseClick: (Int) -> Unit,
+    onDashboardClick: () -> Unit
 ) {
     val expenses by viewModel.allExpenses.collectAsState()
 
@@ -30,14 +32,22 @@ fun HomeScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("ExpenseWise") })
+            TopAppBar(
+                title = { Text("ExpenseWise") },
+                actions = {
+                    IconButton(onClick = onDashboardClick) {
+                        Icon(Icons.Default.PieChart, contentDescription = "Dashboard")
+                    }
+                }
+            )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddExpenseClick) {
                 Icon(Icons.Default.Add, contentDescription = "Add Expense")
             }
         }
-    ) { paddingValues ->
+    )
+    { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)

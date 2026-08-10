@@ -21,6 +21,7 @@ import com.janet.expensewise.expense.presentation.addexpense.AddExpenseScreen
 import com.janet.expensewise.expense.presentation.details.ExpenseDetailsScreen
 import com.janet.expensewise.expense.presentation.home.HomeScreen
 import com.janet.expensewise.ui.theme.ExpenseWiseTheme
+import com.janet.expensewise.expense.presentation.dashboard.DashboardScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,8 +47,15 @@ fun ExpenseWiseApp() {
                 },
                 onExpenseClick = { expenseId ->
                     navController.navigate("expense_details/$expenseId")
+                },
+                onDashboardClick = {
+                    navController.navigate("dashboard")
                 }
             )
+        }
+
+        composable("dashboard") {
+            DashboardScreen()
         }
 
         composable("add_expense") {

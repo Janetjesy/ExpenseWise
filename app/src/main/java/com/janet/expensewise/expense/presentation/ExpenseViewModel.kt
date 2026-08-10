@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.YearMonth
+
 
 class ExpenseViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -27,6 +29,16 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
+    }
+    fun getExpensesForMonth(expenses: List<Expense>, yearMonth: YearMonth): List<Expense> {
+        return expenses.filter { expense ->
+            try {
+                val expenseMonth = YearMonth.parse(expense.date.substring(0, 7))
+                expenseMonth == yearMonth
+            } catch (e: Exception) {
+                false
+            }
+        }
     }
 
     fun addExpense(expense: Expense) {
