@@ -31,13 +31,9 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
         )
     }
     fun getExpensesForMonth(expenses: List<Expense>, yearMonth: YearMonth): List<Expense> {
+        val target = yearMonth.toString() // e.g. "2026-08"
         return expenses.filter { expense ->
-            try {
-                val expenseMonth = YearMonth.parse(expense.date.substring(0, 7))
-                expenseMonth == yearMonth
-            } catch (e: Exception) {
-                false
-            }
+            expense.date.startsWith(target)
         }
     }
 
