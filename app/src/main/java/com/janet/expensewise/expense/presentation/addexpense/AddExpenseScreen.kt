@@ -19,6 +19,7 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
+import com.janet.expensewise.ui.theme.CategoryColors
 
 private val categories = listOf(
     "Food", "Transport", "Shopping", "Bills",
@@ -178,6 +179,7 @@ fun AddExpenseScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FlowRowCategories(
     categories: List<String>,
@@ -192,6 +194,12 @@ private fun FlowRowCategories(
                         selected = category == selected,
                         onClick = { onSelect(category) },
                         label = { Text(category) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = CategoryColors[category]?.copy(alpha = 0.25f)
+                                ?: MaterialTheme.colorScheme.secondaryContainer,
+                            selectedLabelColor = CategoryColors[category]
+                                ?: MaterialTheme.colorScheme.onSecondaryContainer
+                        ),
                         modifier = Modifier.padding(end = 8.dp)
                     )
                 }
@@ -200,6 +208,7 @@ private fun FlowRowCategories(
         }
     }
 }
+
 //for the date
 private fun String.toLongDateMillisOrNull(): Long? {
     return try {

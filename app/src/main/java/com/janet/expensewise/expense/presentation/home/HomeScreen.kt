@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.janet.expensewise.expense.presentation.ExpenseViewModel
 import com.janet.expensewise.expense.presentation.components.ExpenseCard
+import com.janet.expensewise.expense.presentation.components.TotalSpendingCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,14 +55,12 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            Text(
-                text = "Total this month: KES $totalThisMonth",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+            TotalSpendingCard(
+                label = "Total this month",
+                amount = totalThisMonth
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
             if (expenses.isEmpty()) {
                 Text("No expenses yet. Tap + to add one.")
             } else {
