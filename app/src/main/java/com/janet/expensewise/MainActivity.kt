@@ -55,7 +55,9 @@ fun ExpenseWiseApp() {
         }
 
         composable("dashboard") {
-            DashboardScreen()
+            DashboardScreen(
+                onBack = { navController.popBackStack() }
+            )
         }
 
         composable("add_expense") {

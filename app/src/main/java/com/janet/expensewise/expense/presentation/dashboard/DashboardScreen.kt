@@ -19,11 +19,14 @@ import ir.ehsannarmani.compose_charts.PieChart
 import ir.ehsannarmani.compose_charts.models.Pie
 import com.janet.expensewise.expense.presentation.components.TotalSpendingCard
 import com.janet.expensewise.ui.theme.CategoryColors
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
-    viewModel: ExpenseViewModel = viewModel()
+    viewModel: ExpenseViewModel = viewModel(),
+    onBack: () -> Unit
 ) {
     val allExpenses by viewModel.allExpenses.collectAsState()
 
@@ -48,7 +51,14 @@ fun DashboardScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Dashboard") })
+            TopAppBar(
+                title = { Text("Dashboard") },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
         }
     ) { paddingValues ->
         Column(
