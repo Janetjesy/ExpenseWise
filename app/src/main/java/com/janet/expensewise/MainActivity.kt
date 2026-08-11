@@ -22,6 +22,7 @@ import com.janet.expensewise.expense.presentation.details.ExpenseDetailsScreen
 import com.janet.expensewise.expense.presentation.home.HomeScreen
 import com.janet.expensewise.ui.theme.ExpenseWiseTheme
 import com.janet.expensewise.expense.presentation.dashboard.DashboardScreen
+import com.janet.expensewise.expense.presentation.splash.SplashScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +39,17 @@ class MainActivity : ComponentActivity() {
 fun ExpenseWiseApp() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = "splash") {
+
+        composable("splash") {
+            SplashScreen(
+                onFinished = {
+                    navController.navigate("home") {
+                        popUpTo("splash") { inclusive = true }
+                    }
+                }
+            )
+        }
 
         composable("home") {
             HomeScreen(

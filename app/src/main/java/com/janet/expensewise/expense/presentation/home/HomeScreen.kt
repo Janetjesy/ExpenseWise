@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -18,6 +19,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.janet.expensewise.expense.presentation.ExpenseViewModel
 import com.janet.expensewise.expense.presentation.components.ExpenseCard
 import com.janet.expensewise.expense.presentation.components.TotalSpendingCard
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import com.janet.expensewise.expense.presentation.HomeTab
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,8 +34,9 @@ fun HomeScreen(
     onDashboardClick: () -> Unit
 ) {
     val expenses by viewModel.allExpenses.collectAsState()
-
-    val totalThisMonth = expenses.sumOf { it.amount }
+    var selectedTab by remember { mutableStateOf(HomeTab.TODAY) }
+    val filteredExpenses = viewModel.getFilteredExpenses(expenses, selectedTab)
+    val totalForTab = filteredExpenses.sumOf { it.amount }
 
     Scaffold(
         topBar = {
@@ -55,17 +62,30 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
+            TabRow(selectedTabIndex = selectedTab.ordinal) {
+                HomeTab.entries.forEach { tab ->
+                    Tab(
+                        selected = selectedTab == tab,
+                        onClick = { selectedTab = tab },
+                        text = { Text(tab.label) }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             TotalSpendingCard(
-                label = "Total this month",
-                amount = totalThisMonth
+                label = "Total (${selectedTab.label})",
+                amount = totalForTab
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-            if (expenses.isEmpty()) {
-                Text("No expenses yet. Tap + to add one.")
+
+            if (filteredExpenses.isEmpty()) {
+                Text("No expenses for this period.")
             } else {
                 LazyColumn {
-                    items(expenses) { expense ->
+                    items(filteredExpenses) { expense ->
                         ExpenseCard(
                             expense = expense,
                             onDelete = { viewModel.deleteExpense(it) },

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.YearMonth
 
 
@@ -34,6 +35,31 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
         val target = yearMonth.toString() // e.g. "2026-08"
         return expenses.filter { expense ->
             expense.date.startsWith(target)
+        }
+    }
+
+    fun getFilteredExpenses(expenses: List<Expense>, tab: HomeTab): List<Expense> {
+        val today = LocalDate.now()
+        return when (tab) {
+            HomeTab.TODAY -> {
+                expenses.filter { it.date == today.toString() }
+            }
+            HomeTab.WEEKLY -> {
+                val sevenDaysAgo = today.minusDays(7)
+                expenses.filter {
+                    try {
+                        val expenseDate = LocalDate.parse(it.date)
+                        !expenseDate.isBefore(sevenDaysAgo) && !expenseDate.isAfter(today)
+                    } catch (e: Exception) {
+                        false
+                    }
+                }
+            }
+            HomeTab.MONTHLY -> {
+                val currentMonth = YearMonth.now().toString()
+                expenses.filter { it.date.startsWith(currentMonth) }
+            }
+            HomeTab.ALL -> expenses
         }
     }
 
