@@ -28,6 +28,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
     }
 
     buildFeatures {
@@ -47,6 +48,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.compose.charts)
+    //for modern version apis and older version androids together
+    coreLibraryDesugaring(libs.android.desugarJdkLibs)
 
     // Room
     implementation(libs.androidx.room.runtime)

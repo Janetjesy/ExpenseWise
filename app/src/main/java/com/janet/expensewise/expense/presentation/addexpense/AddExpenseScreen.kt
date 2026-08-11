@@ -12,6 +12,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.janet.expensewise.expense.data.Expense
 import com.janet.expensewise.expense.presentation.ExpenseViewModel
+import androidx.compose.material.icons.filled.CalendarToday
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZoneOffset
+import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.Icons
 
 private val categories = listOf(
     "Food", "Transport", "Shopping", "Bills",
@@ -45,13 +52,55 @@ fun AddExpenseScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
+            var showDatePicker by remember { mutableStateOf(false) }
+
             OutlinedTextField(
-                value = amountText,
-                onValueChange = { amountText = it },
-                label = { Text("Amount") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                modifier = Modifier.fillMaxWidth()
+                value = date,
+                onValueChange = { },
+                readOnly = true,
+                label = { Text("Date") },
+                trailingIcon = {
+                    IconButton(onClick = { showDatePicker = true }) {
+                        Icon(Icons.Default.CalendarToday, contentDescription = "Pick date")
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showDatePicker = true }
             )
+
+            if (showDatePicker) {
+                val initialMillis = date.toLongDateMillisOrNull()
+                    ?: System.currentTimeMillis()
+
+                val datePickerState = rememberDatePickerState(
+                    initialSelectedDateMillis = initialMillis
+                )
+
+                DatePickerDialog(
+                    onDismissRequest = { showDatePicker = false },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            datePickerState.selectedDateMillis?.let { millis ->
+                                date = Instant.ofEpochMilli(millis)
+                                    .atZone(ZoneOffset.UTC)
+                                    .toLocalDate()
+                                    .toString()
+                            }
+                            showDatePicker = false
+                        }) {
+                            Text("OK")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showDatePicker = false }) {
+                            Text("Cancel")
+                        }
+                    }
+                ) {
+                    DatePicker(state = datePickerState)
+                }
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -74,12 +123,7 @@ fun AddExpenseScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            OutlinedTextField(
-                value = date,
-                onValueChange = { date = it },
-                label = { Text("Date (e.g. 2026-08-09)") },
-                modifier = Modifier.fillMaxWidth()
-            )
+
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -154,5 +198,16 @@ private fun FlowRowCategories(
             }
             Spacer(modifier = Modifier.height(4.dp))
         }
+    }
+}
+//for the date
+private fun String.toLongDateMillisOrNull(): Long? {
+    return try {
+        LocalDate.parse(this)
+            .atStartOfDay(ZoneOffset.UTC)
+            .toInstant()
+            .toEpochMilli()
+    } catch (e: Exception) {
+        null
     }
 }
