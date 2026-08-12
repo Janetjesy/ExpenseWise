@@ -10,6 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.RoundedCornerShape
+import com.janet.expensewise.expense.util.formatCurrency
 
 @Composable
 fun TotalSpendingCard(
@@ -33,7 +34,7 @@ fun TotalSpendingCard(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "KES $amount",
+                text = formatCurrency(amount),
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold
             )

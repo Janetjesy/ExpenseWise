@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.background
 import com.janet.expensewise.ui.theme.CategoryColors
+import com.janet.expensewise.expense.util.formatCurrency
 
 @Composable
 fun ExpenseCard(
@@ -61,7 +62,7 @@ fun ExpenseCard(
 
             Row {
                 Text(
-                    text = "KES ${expense.amount}",
+                    text = formatCurrency(expense.amount),
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.width(8.dp))

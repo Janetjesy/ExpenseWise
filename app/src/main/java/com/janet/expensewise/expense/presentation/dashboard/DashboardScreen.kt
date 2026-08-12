@@ -21,6 +21,7 @@ import com.janet.expensewise.expense.presentation.components.TotalSpendingCard
 import com.janet.expensewise.ui.theme.CategoryColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import com.janet.expensewise.expense.util.formatCurrency
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,7 +71,7 @@ fun DashboardScreen(
             TotalSpendingCard(
                 label = "Total this month",
                 amount = total,
-                subtitle = highestCategory?.let { "Highest spending: ${it.first} (KES ${it.second})" }
+                subtitle = highestCategory?.let { "Highest spending: ${it.first} (${formatCurrency(it.second)})" }
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -120,7 +121,7 @@ private fun CategoryBar(category: String, amount: Double, percentage: Float) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(category)
-            Text("KES $amount")
+            Text(formatCurrency(amount))
         }
         Spacer(modifier = Modifier.height(4.dp))
         LinearProgressIndicator(

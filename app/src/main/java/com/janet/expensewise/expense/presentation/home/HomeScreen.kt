@@ -30,6 +30,8 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.res.painterResource
 import com.janet.expensewise.R
 import androidx.compose.ui.Alignment
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Clear
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,6 +47,17 @@ fun HomeScreen(
     var selectedTab by remember { mutableStateOf(HomeTab.TODAY) }
     val filteredExpenses = viewModel.getFilteredExpenses(expenses, selectedTab)
     val totalForTab = filteredExpenses.sumOf { it.amount }
+//for searching feature
+    var searchQuery by remember { mutableStateOf("") }
+
+    val searchedExpenses = if (searchQuery.isBlank()) {
+        filteredExpenses
+    } else {
+        filteredExpenses.filter { expense ->
+            expense.category.contains(searchQuery, ignoreCase = true) ||
+                    expense.note?.contains(searchQuery, ignoreCase = true) == true
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -107,11 +120,35 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (filteredExpenses.isEmpty()) {
-                Text("No expenses for this period.")
+            //for searching feature
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                placeholder = { Text("Search by category or note") },
+                leadingIcon = {
+                    Icon(Icons.Default.Search, contentDescription = null)
+                },
+                trailingIcon = {
+                    if (searchQuery.isNotEmpty()) {
+                        IconButton(onClick = { searchQuery = "" }) {
+                            Icon(Icons.Default.Clear, contentDescription = "Clear search")
+                        }
+                    }
+                },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (searchedExpenses.isEmpty()) {
+                Text(
+                    if (searchQuery.isBlank()) "No expenses for this period."
+                    else "No expenses match \"$searchQuery\"."
+                )
             } else {
                 LazyColumn {
-                    items(filteredExpenses) { expense ->
+                    items(searchedExpenses) { expense ->
                         ExpenseCard(
                             expense = expense,
                             onDelete = { viewModel.deleteExpense(it) },
