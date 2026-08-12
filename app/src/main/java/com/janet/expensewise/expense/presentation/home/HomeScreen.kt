@@ -24,6 +24,12 @@ import androidx.compose.material3.TabRow
 import com.janet.expensewise.expense.presentation.HomeTab
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.foundation.Image
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.ui.res.painterResource
+import com.janet.expensewise.R
+import androidx.compose.ui.Alignment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,7 +37,9 @@ fun HomeScreen(
     viewModel: ExpenseViewModel = viewModel(),
     onAddExpenseClick: () -> Unit,
     onExpenseClick: (Int) -> Unit,
-    onDashboardClick: () -> Unit
+    onDashboardClick: () -> Unit,
+    onNotificationClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {}
 ) {
     val expenses by viewModel.allExpenses.collectAsState()
     var selectedTab by remember { mutableStateOf(HomeTab.TODAY) }
@@ -40,11 +48,29 @@ fun HomeScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("ExpenseWise") },
+            CenterAlignedTopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = onNotificationClick) {
+                        Icon(Icons.Default.Notifications, contentDescription = "Notifications")
+                    }
+                },
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = painterResource(id = R.drawable.logo),
+                            contentDescription = "ExpenseWise logo",
+                            modifier = Modifier.size(28.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("ExpenseWise")
+                    }
+                },
                 actions = {
                     IconButton(onClick = onDashboardClick) {
                         Icon(Icons.Default.PieChart, contentDescription = "Dashboard")
+                    }
+                    IconButton(onClick = onSettingsClick) {
+                        Icon(Icons.Default.Settings, contentDescription = "Settings")
                     }
                 }
             )
