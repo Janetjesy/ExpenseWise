@@ -22,6 +22,8 @@ import com.janet.expensewise.ui.theme.CategoryColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import com.janet.expensewise.expense.util.formatCurrency
+import androidx.compose.material.icons.filled.PieChartOutline
+import com.janet.expensewise.expense.presentation.components.EmptyState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,7 +99,10 @@ fun DashboardScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             if (categoryTotals.isEmpty()) {
-                Text("No expenses recorded.")
+                EmptyState(
+                    icon = Icons.Default.PieChartOutline,
+                    message = "No expenses recorded yet."
+                )
             } else {
                 LazyColumn {
                     items(categoryTotals) { (category, amount) ->

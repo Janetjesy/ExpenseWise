@@ -32,6 +32,9 @@ import com.janet.expensewise.R
 import androidx.compose.ui.Alignment
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Inbox
+import androidx.compose.material.icons.filled.SearchOff
+import com.janet.expensewise.expense.presentation.components.EmptyState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -142,8 +145,9 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             if (searchedExpenses.isEmpty()) {
-                Text(
-                    if (searchQuery.isBlank()) "No expenses for this period."
+                EmptyState(
+                    icon = if (searchQuery.isBlank()) Icons.Default.Inbox else Icons.Default.SearchOff,
+                    message = if (searchQuery.isBlank()) "No expenses for this period."
                     else "No expenses match \"$searchQuery\"."
                 )
             } else {
