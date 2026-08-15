@@ -20,23 +20,27 @@ import com.janet.expensewise.expense.presentation.ExpenseViewModel
 import com.janet.expensewise.expense.presentation.addexpense.AddExpenseScreen
 import com.janet.expensewise.expense.presentation.details.ExpenseDetailsScreen
 import com.janet.expensewise.expense.presentation.home.HomeScreen
-import com.janet.expensewise.ui.theme.ExpenseWiseTheme
 import com.janet.expensewise.expense.presentation.dashboard.DashboardScreen
 import com.janet.expensewise.expense.presentation.splash.SplashScreen
+import com.janet.expensewise.expense.presentation.settings.SettingsScreen
+import com.janet.expensewise.expense.presentation.settings.SettingsViewModel
+import com.janet.expensewise.ui.theme.ExpenseWiseTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ExpenseWiseTheme {
-                ExpenseWiseApp()
+            val settingsViewModel: SettingsViewModel = viewModel()
+
+            ExpenseWiseTheme(darkTheme = settingsViewModel.isDarkMode) {
+                ExpenseWiseApp(settingsViewModel = settingsViewModel)
             }
         }
     }
 }
 
 @Composable
-fun ExpenseWiseApp() {
+fun ExpenseWiseApp(settingsViewModel: SettingsViewModel) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "splash") {
@@ -53,15 +57,17 @@ fun ExpenseWiseApp() {
 
         composable("home") {
             HomeScreen(
-                onAddExpenseClick = {
-                    navController.navigate("add_expense")
-                },
-                onExpenseClick = { expenseId ->
-                    navController.navigate("expense_details/$expenseId")
-                },
-                onDashboardClick = {
-                    navController.navigate("dashboard")
-                }
+                onAddExpenseClick = { navController.navigate("add_expense") },
+                onExpenseClick = { expenseId -> navController.navigate("expense_details/$expenseId") },
+                onDashboardClick = { navController.navigate("dashboard") },
+                onSettingsClick = { navController.navigate("settings") }
+            )
+        }
+
+        composable("settings") {
+            SettingsScreen(
+                settingsViewModel = settingsViewModel,
+                onBack = { navController.popBackStack() }
             )
         }
 
@@ -73,9 +79,7 @@ fun ExpenseWiseApp() {
 
         composable("add_expense") {
             AddExpenseScreen(
-                onExpenseSaved = {
-                    navController.popBackStack()
-                }
+                onExpenseSaved = { navController.popBackStack() }
             )
         }
 
@@ -88,9 +92,7 @@ fun ExpenseWiseApp() {
             ExpenseDetailsScreen(
                 expenseId = expenseId,
                 onBack = { navController.popBackStack() },
-                onEdit = { expense ->
-                    navController.navigate("edit_expense/${expense.id}")
-                },
+                onEdit = { expense -> navController.navigate("edit_expense/${expense.id}") },
                 onDeleted = { navController.popBackStack() }
             )
         }

@@ -84,4 +84,10 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
     suspend fun getExpenseById(expenseId: Int): Expense? {
         return repository.getExpenseById(expenseId)
     }
+
+    fun deleteAllExpenses() {
+        viewModelScope.launch {
+            repository.deleteAllExpenses()
+        }
+    }
 }

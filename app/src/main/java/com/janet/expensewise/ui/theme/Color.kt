@@ -43,3 +43,28 @@ val CategoryColors = mapOf(
     "Education" to Color(0xFF4FA88C),
     "Other" to Color(0xFF9E9E8A)
 )
+
+// Dark theme variants(for settings)
+val DarkPrimary = Color(0xFFA0C97A)
+val DarkOnPrimary = Color(0xFF16290A)
+val DarkPrimaryContainer = Color(0xFF3A4F26)
+val DarkOnPrimaryContainer = Color(0xFFDCEDC0)
+
+val DarkSecondary = Color(0xFFB8C2A9)
+val DarkOnSecondary = Color(0xFF272E1F)
+val DarkSecondaryContainer = Color(0xFF3E4634)
+val DarkOnSecondaryContainer = Color(0xFFE1E4D5)
+
+val DarkTertiary = Color(0xFFE3A583)
+val DarkOnTertiary = Color(0xFF442008)
+val DarkTertiaryContainer = Color(0xFF5D3319)
+val DarkOnTertiaryContainer = Color(0xFFFDDBC7)
+
+val DarkBackground = Color(0xFF1B1C18)
+val DarkOnBackground = Color(0xFFE4E3DA)
+
+val DarkSurface = Color(0xFF242620)
+val DarkOnSurface = Color(0xFFE4E3DA)
+val DarkSurfaceVariant = Color(0xFF383A32)
+
+val DarkOutline = Color(0xFF8F9285)
